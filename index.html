@@ -16,7 +16,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.css" />
 
 
-  <!--       IF YOU USE DC.JS VERSION 1 (ALSO CHANGE TO RENDERLET CODE)-->
+  <!--       IF YOU USE DC.JS VERSION 1 (ALSO CHANGE TO RENDERLET CODE IN THE JAVASCRIPT BELOW)-->
   <!--
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.css" />
@@ -33,14 +33,16 @@
           <th onClick="orderByRun()" onmouseover="" style="cursor: pointer;">#Run</th>
           <th onClick="orderByAvg()" onmouseover="" style="cursor: pointer;">Avg(Speed)</th>
         </tr>
-        <!--
+        <!--  what the html will look like in the total row
 <tr class="dc-table-group info">
-  <td class="dc-table-label" colspan="3">rank</td>
-  <td class="sum">8282</td>
+  <td class="dc-table-label" colspan="3">"Experiments Total"</td>
+  <td class="totaRuns">10</td>
 </tr>
 -->
       </thead>
     </table>
+
+    <h6><a href="https://github.com/GeekChicGoddess/dc.jsDatatableWithColumnTotalsAndClickableSorts">Code</a></h6>
   </div>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.js"></script>
