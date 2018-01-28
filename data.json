@@ -1,0 +1,51 @@
+[{
+  "expt": 1,
+  "Group": "Experiments Total",
+  "run": 1,
+  "speed": 850
+    }, {
+  "expt": 1,
+  "Group": "Experiments Total",
+  "run": 2,
+  "speed": 855
+    }, {
+  "expt": 1,
+  "Group": "Experiments Total",
+  "run": 3,
+  "speed": 848
+    }, {
+  "expt": 2,
+  "Group": "Experiments Total",
+  "run": 1,
+  "speed": 750
+    }, {
+  "expt": 2,
+  "Group": "Experiments Total",
+  "run": 2,
+  "speed": 800
+    }, {
+  "expt": 2,
+  "Group": "Experiments Total",
+  "run": 3,
+  "speed": 820
+    }, {
+  "expt": 3,
+  "Group": "Experiments Total",
+  "run": 1,
+  "speed": 810
+    }, {
+  "expt": 3,
+  "Group": "Experiments Total",
+  "run": 2,
+  "speed": 800
+    }, {
+  "expt": 3,
+  "Group": "Experiments Total",
+  "run": 3,
+  "speed": 899
+    }, {
+  "expt": 2,
+  "Group": "Experiments Total",
+  "run": 1,
+  "speed": 850
+    }]
