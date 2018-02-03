@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>dc.js Table of Aggregated Data with titles</title>
+  <title>dc.js Data Table of Aggregated Data with Total Row and Clickable SortBy Column Headings</title>
   <meta charset="UTF-8">
 
 
@@ -29,14 +29,15 @@
     <table id="test" class="table table-striped">
       <thead>
         <tr>
-          <th onClick="orderByExpt()" onmouseover="" style="cursor: pointer;">Experiments</th>
+          <th onClick="orderByExpt()" onmouseover="" style="cursor: pointer;">Ranked Exprmnts</th>
           <th onClick="orderByRun()" onmouseover="" style="cursor: pointer;">#Run</th>
           <th onClick="orderByAvg()" onmouseover="" style="cursor: pointer;">Avg(Speed)</th>
         </tr>
         <!--  what the html will look like in the total row
 <tr class="dc-table-group info">
-  <td class="dc-table-label" colspan="3">"Experiments Total"</td>
-  <td class="totaRuns">10</td>
+<td class="dc-table-label" colspan="1">Experiments Totals</td>
+<td class="totalRuns ">10</td>
+<td class="totalAvg">831</td>
 </tr>
 -->
       </thead>
@@ -48,6 +49,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.js"></script>
 
   <script>
+    // use click functions to pass new sortBy options to the chart and rerender
     function orderByExpt() {
 
       chart.sortBy((function(d) {
@@ -71,39 +73,41 @@
       chart.render();
 
     }
+
+    // dc library with grab the element with id "test" to create a dataTable
     var chart = dc.dataTable("#test");
 
-
+    // using th d3 library to pass and process our json data so crossfilter do its own processing with it
     d3.json("data.json", function(error, experiments) {
 
       var ndx = crossfilter(experiments),
         exptDimension = ndx.dimension(function(d) {
-
+          // the crossfilter will date the data and return it as a crossfilter object using the "expt" field as the dimension
           return +d.expt;
         }),
-        groupedDimension = exptDimension.group().reduce(
-          function(p, v) {
+        groupedDimension = exptDimension.group().reduce( // group will total all the data by dimension ("expt" in our case, and retrun one row of total data for each unique "expt")
+          function(p, v) { // reduce will pull the Values from the data passed and put new Passed values on the objects passed to the tables. These are the data fields we will be able to access for our table.  If you want access to calculated data using the fields from our data, do the calcs and pass the variables here. 
 
             ++p.number;
             p.total += +v.speed;
             p.avg = Math.round(p.total / p.number);
             return p;
           },
-          function(p, v) {
+          function(p, v) { // if we create filter charts using the name "ndx" crossfilter, dc.js will filter out the data from our data table when we use those charts to filter out data.  So we need to pass reduce a function that will reverse the affected data from our group totals.
             --p.number;
             p.total -= +v.speed;
             p.avg = (p.number == 0) ? 0 : Math.round(p.total / p.number);
 
             return p;
           },
-          function() {
+          function() { // initializer function (basically variable declarations)
             return {
               number: 0,
               total: 0,
               avg: 0
             }
           }),
-        groupBy = function(p) {
+        groupBy = function(p) { // this will group up all rows and create a row at the top with "Experiments Totals" displayed in the first column (when passed to the ".group" option of the chart.  Could instead pass a data field and for additional grouping/totaling, in which case you will get a leading row at the beginning of every group.
           return "Experiments Totals";
         };
       chart
@@ -111,7 +115,7 @@
         .height(480)
         .dimension(groupedDimension)
         .group(groupBy)
-        .columns([function(d) {
+        .columns([function(d) { // you can also pass "label" to these objects to dynamically create columns headings
             return d.key
           },
           function(d) {
@@ -124,7 +128,7 @@
         .sortBy((function(d) {
           return d.value.avg
         }))
-        .order(d3.descending)
+        .order(d3.descending) // so I'm reading that these data charts only do d3.descending.  Google "dc.js fake group" if you want to do acsending
       chart.render();
 
     });
@@ -134,16 +138,25 @@
     //    chart.renderlet(function(chart) {
 
     chart.on('pretransition', function(chart) {
+      // everytime we are about to render the table, we are going to run these functions to force some data into the columns on the groupBy leader rows
+
+
 
       var grouprow = chart.selectAll('tr.dc-table-group').classed('info', true);
-      // fetch previous colspan only once
+      // grouprow is now a 1 index array which is an object that contains all of the information for the the tr row created by groupBy. it include __data__ object which has all of the data from the rows in the groupBy group
+
+
+
+      // fetch previous colspan only once by verifying it's still null
       if (colspan === null) {
         colspan = +grouprow.select('td').attr('colspan') - 2;
+        // colspan is now = 1;
       }
 
+      // select the first(colspan attribute = 1) td in grouprow
       grouprow.selectAll('td.dc-table-label').attr('colspan', colspan);
 
-
+      // We will add up all of the number values in the group, append a td to the group row, and set the inner text to our calculated total
       var totalRuns = grouprow.selectAll('td.totalRuns ').data(function(d) {
 
         return [d.values.map(function(d) {
@@ -153,13 +166,14 @@
           return a + b;
         })];
       });
-
       totalRuns.enter().append('td').attr('class', 'totalRuns ');
 
       totalRuns.text(function(d) {
         return d;
       });
 
+
+      // We will add up all of the averages values in the group, divide by count to get a total average, append a td to the group row, and set the inner text to our calculated total average
       var count = 0;
       var totalAvg = grouprow.selectAll('td.totalAvg').data(function(d) {
         return [d.values.map(function(d) {
